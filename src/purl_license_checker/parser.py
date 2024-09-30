@@ -112,7 +112,7 @@ def get_nuget_license(purlfmt: PackageURL):
         "User-Agent": "malwarebytes/purl-license-checker",
     }
     pkg = requests.get(
-        url=f"https://www.nuget.org/packages/{purl_path}",
+        url=f"https://azuresearch-ussc.nuget.org/query?q={purl_path}",
         headers=headers,
     )
 
@@ -121,16 +121,12 @@ def get_nuget_license(purlfmt: PackageURL):
         return False
     
     try:
-        license = None
-        page = BeautifulSoup(pkg.text, "html.parser")
-        for link in page.find_all("a"):
-            if link.get("href").startswith("https://licenses.nuget.org/"):
-                print(link.get_text())
-                license = link.get_text()
+        license = pkg.json()["data"][0]["licenseUrl"]
+        print(license)
     except Exception as e:
         print(str(e))
         return False
-    
+
     return license
 
 def get_php_license(purlfmt: PackageURL):
