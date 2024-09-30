@@ -49,14 +49,19 @@ def cli() -> None:
 @click.argument("path")
 @click.argument("token")
 def load_csv(path: str, token: str) -> None:
+
+    merge_csvs()
+    return
     # Dict formed by {purl: license} entries
     licenses = {}
 
     # Parse the csv input
     # repo_name, purl, version, license
+    input_csv = {}
     with open(path, "r") as f:
         for l in f.readlines():
             line = l.split(",")
+            input_csv
             try:
                 if licenses[line[1].strip()] != "":
                     continue
@@ -66,7 +71,6 @@ def load_csv(path: str, token: str) -> None:
                 licenses[line[1].strip()] = line[3].strip()
             else:
                 licenses[line[1].strip()] = ""
-
 
         # Fetch the license for each empty license
         for l in licenses.keys():
@@ -80,9 +84,32 @@ def load_csv(path: str, token: str) -> None:
     with open("output.csv", "w") as f:
         for k in licenses.keys():
             f.write(f"{k}, {licenses[k]}\n")
+
     #print(licenses)
+
+# Merge CSV, add licenses.csv into deps_list_output.csv
+def merge_csvs() -> None:
+    str_output = ""
+    with open("licenses.csv", "r") as finput:
+        with open("deps_list_output.csv", 'r') as foutput:
+            finput_lines = finput.readlines()
+            for line in foutput.readlines():
+                repo_output, purl_output, version_output, license_output = line.split(',')[:4]
+                purl_output = purl_output.strip()
+                license_output = license_output.strip()
+                for l in finput_lines:
+                    purl, license = l.split(',')
+                    purl = purl.strip()
+                    license = license.strip()
+                    if purl_output == purl:
+                        str_output += f"{repo_output.strip()}, {purl_output.strip()}, {version_output.strip()}, {license}"
+                        str_output += "\n"
+
+    with open("deps_output.csv", "w") as fexport:
+        fexport.write(str_output)
 
 
 if __name__ == "__main__":
     #get_license()
     load_csv()
+    #merge_csvs()

@@ -17,6 +17,8 @@ def get_license(purl: str, token: str):
     match purlfmt.type:
         case "actions":
           return get_gha_license(purlfmt, token)
+        case "composer":
+            return get_php_license(purlfmt)
         case _:
             return False
 
@@ -32,14 +34,6 @@ def get_pip_license():
 def get_gha_license(purlfmt: PackageURL, token: str):
     """
     Fetch GitHub for a license
-    """
-
-    """
-    curl -L \
-  -H "Accept: application/vnd.github+json" \
-  -H "Authorization: Bearer <YOUR-TOKEN>" \
-  -H "X-GitHub-Api-Version: 2022-11-28" \
-  https://api.github.com/repos/OWNER/REPO
     """
     # Format purl
     ## Some actions purl are like `cloudposse/actions/github/slash-command-dispatch`, we need to trim it down.
@@ -68,6 +62,33 @@ def get_gha_license(purlfmt: PackageURL, token: str):
 
     try:
         license = repo.json()["license"]["spdx_id"]
+    except Exception as e:
+        return False
+
+    return license
+
+def get_php_license(purlfmt: PackageURL):
+    """
+    Fetch packagists.org to discover a license
+
+    Ex: https://repo.packagist.org/p2/symfony/event-dispatcher-contracts.json
+    """
+    purl_path = f"{purlfmt.namespace}/{purlfmt.name}"
+
+    headers = {
+        "User-Agent": "malwarebytes/purl-license-checker",
+    }
+    pkg = requests.get(
+        url=f"https://repo.packagist.org/p2/{purl_path}.json",
+        headers=headers,
+    )
+
+    if pkg.status_code != 200:
+        print(pkg.status_code)
+        return False
+
+    try:
+        license = pkg.json()["packages"][purl_path][0]["license"][0]
     except Exception as e:
         return False
 
