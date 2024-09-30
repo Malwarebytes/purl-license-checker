@@ -16,16 +16,18 @@ def get_license(purl: str, token: str):
             return False
 
     match purlfmt.type:
-        case "actions":
-          return get_gha_license(purlfmt, token)
-        case "go":
-            return get_go_license(purlfmt)
-        case "composer":
-            return get_php_license(purlfmt)
-        case "go":
-            return get_go_license(purlfmt)
-        case "rubygems":
-            return get_ruby_license(purlfmt)
+        #case "actions":
+        #  return get_gha_license(purlfmt, token)
+        #case "go":
+        #    return get_go_license(purlfmt)
+        #case "composer":
+        #    return get_php_license(purlfmt)
+        #case "go":
+        #    return get_go_license(purlfmt)
+        case "nuget":
+            return get_nuget_license(purlfmt)
+        #case "rubygems":
+        #    return get_ruby_license(purlfmt)
         case _:
             return False
 
@@ -91,6 +93,40 @@ def get_go_license(purlfmt: PackageURL):
     try:
         page = BeautifulSoup(pkg.text, "html.parser")
         license = page.find(id="#lic-0").get_text()
+    except Exception as e:
+        print(str(e))
+        return False
+    
+    return license
+
+
+def get_nuget_license(purlfmt: PackageURL):
+    """
+    Fetch nuget.org to discover a license
+
+    Ex: https://www.nuget.org/packages/Microsoft.CodeDom.Providers.DotNetCompilerPlatform/
+    """
+    purl_path = f"{purlfmt.name}"
+
+    headers = {
+        "User-Agent": "malwarebytes/purl-license-checker",
+    }
+    pkg = requests.get(
+        url=f"https://www.nuget.org/packages/{purl_path}",
+        headers=headers,
+    )
+
+    if pkg.status_code != 200:
+        print(pkg.status_code)
+        return False
+    
+    try:
+        license = None
+        page = BeautifulSoup(pkg.text, "html.parser")
+        for link in page.find_all("a"):
+            if link.get("href").startswith("https://licenses.nuget.org/"):
+                print(link.get_text())
+                license = link.get_text()
     except Exception as e:
         print(str(e))
         return False
