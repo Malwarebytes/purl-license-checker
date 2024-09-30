@@ -22,6 +22,10 @@ def get_license(purl: str, token: str):
             return get_go_license(purlfmt)
         case "composer":
             return get_php_license(purlfmt)
+        case "go":
+            return get_go_license(purlfmt)
+        case "rubygems":
+            return get_ruby_license(purlfmt)
         case _:
             return False
 
@@ -116,6 +120,34 @@ def get_php_license(purlfmt: PackageURL):
     try:
         license = pkg.json()["packages"][purl_path][0]["license"][0]
     except Exception as e:
+        return False
+
+    return license
+
+def get_ruby_license(purlfmt: PackageURL)-> str:
+    """
+    Fetch rubygems.org to discover a license
+
+    Ex: https://rubygems.org/api/v1/gems/xcinvoke.json
+    """
+    purl_path = f"{purlfmt.name}"
+
+    headers = {
+        "User-Agent": "malwarebytes/purl-license-checker",
+    }
+    pkg = requests.get(
+        url=f"https://rubygems.org/api/v1/gems/{purl_path}.json",
+        headers=headers,
+    )
+
+    if pkg.status_code != 200:
+        print(pkg.status_code)
+        return False
+
+    try:
+        license = pkg.json()["licenses"][0]
+    except Exception as e:
+        print(str(e))
         return False
 
     return license
