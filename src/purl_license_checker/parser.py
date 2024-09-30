@@ -18,6 +18,8 @@ def get_license(purl: str, token: str):
     match purlfmt.type:
         case "actions":
           return get_gha_license(purlfmt, token)
+        case "go":
+            return get_go_license(purlfmt)
         case "composer":
             return get_php_license(purlfmt)
         case "go":
