@@ -40,18 +40,12 @@ def cli() -> None:
     Get help: `@jboursier-mwb` on GitHub
     """
 
-#@click.command()
-#@click.argument("purl")
-#def get_license(purl: str) -> None:
-#    return parser.get_license(purl=purl)
 
-@click.command()
+@cli.command("load_file")
 @click.argument("path")
 @click.argument("token")
 def load_csv(path: str, token: str) -> None:
 
-    merge_csvs()
-    return
     # Dict formed by {purl: license} entries
     licenses = {}
 
@@ -87,29 +81,44 @@ def load_csv(path: str, token: str) -> None:
 
     #print(licenses)
 
+@cli.command("get_license")
+@click.argument("purl")
+@click.argument("token")
+def get_purl_license(purl: str, token: str) -> None:
+    click.echo(parser.get_license(purl=purl, token=str))
+
+
+@cli.command("merge_csv")
+@click.argument("input_licenses_file")
+@click.argument("output_license_file")
 # Merge CSV, add licenses.csv into deps_list_output.csv
-def merge_csvs() -> None:
+def merge_csvs(input_licenses_file: str, output_license_file: str) -> None:
     str_output = ""
-    with open("licenses.csv", "r") as finput:
-        with open("deps_list_output.csv", 'r') as foutput:
-            finput_lines = finput.readlines()
-            for line in foutput.readlines():
-                repo_output, purl_output, version_output, license_output = line.split(',')[:4]
-                purl_output = purl_output.strip()
-                license_output = license_output.strip()
-                for l in finput_lines:
-                    purl, license = l.split(',')
-                    purl = purl.strip()
-                    license = license.strip()
-                    if purl_output == purl:
-                        str_output += f"{repo_output.strip()}, {purl_output.strip()}, {version_output.strip()}, {license}"
-                        str_output += "\n"
+    licenses_input = {}
+    with open(input_licenses_file, "r") as finput:
+        finput_lines = finput.readlines()
+        for l in finput_lines:
+            purl, license = l.split(',')
+            licenses_input[purl.strip()] = license.strip()
+
+    with open(output_license_file, 'r') as foutput:
+        for line in foutput.readlines():
+            repo_output, purl_output, version_output, license_output = line.split(',')[:4]
+            purl_output = purl_output.strip()
+            license_output = license_output.strip()
+            if licenses_input[purl_output]:
+                str_output += f"{repo_output.strip()}, {purl_output.strip()}, {version_output.strip()}, {licenses_input[purl_output]}"
+                str_output += "\n"
+            else:
+                str_output += f"{repo_output.strip()}, {purl_output.strip()}, {version_output.strip()}, Unknown"
+                str_output += "\n"
 
     with open("deps_output.csv", "w") as fexport:
         fexport.write(str_output)
 
 
 if __name__ == "__main__":
+    cli()
     #get_license()
-    load_csv()
+    #load_csv()
     #merge_csvs()
