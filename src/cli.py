@@ -98,7 +98,7 @@ def merge_csvs(input_licenses_file: str, output_license_file: str) -> None:
     with open(input_licenses_file, "r") as finput:
         finput_lines = finput.readlines()
         for l in finput_lines:
-            purl, license = l.split(',')
+            purl, license = l.split(',', maxsplit=1)
             licenses_input[purl.strip()] = license.strip()
 
     with open(output_license_file, 'r') as foutput:
