@@ -18,17 +18,13 @@ def get_license(purl: str, token: str):
     match purlfmt.type:
         case "actions":
           return get_gha_license(purlfmt, token)
+        case "go":
+            return get_go_license(purlfmt)
         case "composer":
             return get_php_license(purlfmt)
         case _:
             return False
 
-    return None
-
-def get_pip_license():
-    """
-    Fetch pypi to discover a license
-    """
     return None
 
 
@@ -68,6 +64,35 @@ def get_gha_license(purlfmt: PackageURL, token: str):
 
     return license
 
+def get_go_license(purlfmt: PackageURL):
+    """
+    Fetch pkg.go.dev to discover a license
+
+    Ex: https://pkg.go.dev/github.com/juju/errors?tab=licenses
+    """
+    purl_path = f"{purlfmt.namespace}/{purlfmt.name}"
+
+    headers = {
+        "User-Agent": "malwarebytes/purl-license-checker",
+    }
+    pkg = requests.get(
+        url=f"https://pkg.go.dev/{purl_path}?tab=licenses",
+        headers=headers,
+    )
+
+    if pkg.status_code != 200:
+        print(pkg.status_code)
+        return False
+    
+    try:
+        page = BeautifulSoup(pkg.text, "html.parser")
+        license = page.find(id="#lic-0").get_text()
+    except Exception as e:
+        print(str(e))
+        return False
+    
+    return license
+
 def get_php_license(purlfmt: PackageURL):
     """
     Fetch packagists.org to discover a license
@@ -101,8 +126,8 @@ def get_swift_license():
     """
     return None
 
-def get_go_license():
+def get_pip_license():
     """
-    Fetch golang.org to discover a license
+    Fetch pypi to discover a license
     """
     return None
