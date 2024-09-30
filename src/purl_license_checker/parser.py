@@ -3,6 +3,7 @@
 
 from packageurl import PackageURL
 import requests
+from bs4 import BeautifulSoup
 
 def get_license(purl: str, token: str):
     try:
