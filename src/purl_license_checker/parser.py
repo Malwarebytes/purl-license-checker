@@ -4,6 +4,7 @@
 from packageurl import PackageURL
 import requests
 from bs4 import BeautifulSoup
+import time
 
 def get_license(purl: str, token: str):
     try:
@@ -12,8 +13,11 @@ def get_license(purl: str, token: str):
         #print("Invalid purl, trying to reformat...")
         try:
             purlfmt = PackageURL.from_string(f"pkg:{purl.replace(':', '/', 1)}")
-        except:
-            return False
+        except Exception as e:
+            try:
+                purlfmt = PackageURL.from_string(f"pkg:{purl.replace(':', '/', 2)}") # Maven fixes
+            except:
+                return False
 
     match purlfmt.type:
         #case "actions":
@@ -24,8 +28,10 @@ def get_license(purl: str, token: str):
         #    return get_php_license(purlfmt)
         #case "go":
         #    return get_go_license(purlfmt)
-        case "nuget":
-            return get_nuget_license(purlfmt)
+        case "maven":
+            return get_maven_license(purlfmt, token)
+        #case "nuget":
+        #    return get_nuget_license(purlfmt)
         #case "rubygems":
         #    return get_ruby_license(purlfmt)
         case _:
@@ -97,6 +103,38 @@ def get_go_license(purlfmt: PackageURL):
         print(str(e))
         return False
     
+    return license
+
+def get_maven_license(purlfmt: PackageURL, token: str):
+    """
+    Fetch maven to discover a license
+
+    Ex: https://central.sonatype.com/artifact/io.github.pen-drive/jet-ads
+    """
+    purl_path = f"{purlfmt.namespace}/{purlfmt.name}"
+
+    headers = {
+        "User-Agent": "malwarebytes/purl-license-checker",
+    }
+    pkg = requests.get(
+        url=f"https://central.sonatype.com/artifact/{purl_path}",
+        headers=headers,
+    )
+
+    if pkg.status_code != 200:
+        print(pkg.status_code)
+        return False
+    
+    try:
+        page = BeautifulSoup(pkg.text, "html.parser")
+        license = page.find(attrs={"data-test":"license"}).get_text()
+        print(license)
+    except Exception as e:
+        print(str(e))
+        return False
+    
+    time.sleep(0.5)
+
     return license
 
 
