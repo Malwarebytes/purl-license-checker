@@ -23,11 +23,13 @@ include = ["src/cli.py"]
 
 [tool.poetry.dependencies]
 python = ">=3.12,<4"
-click = ">=8"
 requests = "*"
 configparser = "*"
 python-magic = "*"
 urllib3 = ">=1.26.12,<3.0.0"
+packageurl-python = "^0.15.6"
+logging = "^0.4.9.6"
+click = "^8.1.7"
 
 [tool.poetry.dev-dependencies]
 
