@@ -9,7 +9,7 @@ permissions:
   contents: read
 jobs:
   dependency-review:
-    runs-on: [self-hosted, linux, x64, ubuntu-22.04]
+    runs-on: [ubuntu-latest]
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@v4
