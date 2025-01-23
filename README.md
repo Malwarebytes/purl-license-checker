@@ -1,17 +1,24 @@
 # purl-license-checker
 
-Retrieve licenses for purl documented dependencies.
+Retrieve missing licenses for `purl` documented dependencies.
+
+
+[![CodeQL](https://github.com/Malwarebytes/purl-license-checker/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/Malwarebytes/purl-license-checker/actions/workflows/codeql.yml)
+[![Downloads](https://static.pepy.tech/personalized-badge/purl-license-checker?period=total&units=international_system&left_color=grey&right_color=blue&left_text=Downloads)](https://pepy.tech/project/purl-license-checker)
+[![Supported Versions](https://img.shields.io/pypi/pyversions/purl-license-checker.svg)](https://pypi.org/project/purl-license-checker)
+[![Contributors](https://img.shields.io/github/contributors/malwarebytes/purl-license-checker.svg)](https://github.com/malwarebytes/purl-license-checker/graphs/contributors)
 
 
 This cli utility takes one or more purl formatted urls from stdin and will try to find the license attached to each of them, by querying various package managers databases.
 
-This is particularly useful to fill GitHub's Dependabot gap of missing 90% of licenses.
+This is particularly useful to fill GitHub's Dependabot gap of missing 90% of licenses when working at scale with [ghas-cli](https://github.com/Malwarebytes/ghas-cli
+) for instance.
 
 
 
 ## Installation
 
-Builds are available in the [`Releases`](https://github.com/Malwarebytes/purl-license-checker/releases) tab.
+Builds are available in the [`Releases`](https://github.com/Malwarebytes/purl-license-checker/releases) tab and on [Pypi](https://pypi.org/project/purl-license-checker/)
 
 * Pypi:
 
