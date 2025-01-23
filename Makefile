@@ -16,7 +16,7 @@ clean: ## clean existing builds
 
 release: ## Build a wheel
 	$(POETRY) build
-	$(SYFT) packages file:poetry.lock -o spdx-json > dist/sbom.json
+	$(SYFT) scan file:poetry.lock -o spdx-json > dist/sbom.json
 	cd dist && sha512sum * > ../checksums.sha512
 	gpg --detach-sign --armor checksums.sha512
 
@@ -27,7 +27,7 @@ shell: ## Generate the shell autocompletion
 	_GHAS_CLI_COMPLETE=source_bash purl-license-checker > purl-license-checker-complete.sh || true
 
 deps: ## Fetch or update dependencies
-	$(POETRY) update --without dev
+	$(POETRY) update
 
 help:
 	@awk -F ':|##' '/^[^\t].+?:.*?##/ { printf "\033[36m%-30s\033[0m %s\n", $$1, $$NF }' $(MAKEFILE_LIST) | sort
