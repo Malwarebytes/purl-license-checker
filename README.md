@@ -14,7 +14,18 @@ This cli utility takes one or more purl formatted urls from stdin and will try t
 This is particularly useful to fill GitHub's Dependabot gap of missing 90% of licenses when working at scale with [ghas-cli](https://github.com/Malwarebytes/ghas-cli
 ) for instance.
 
+## Supported package managers:
 
+- Github Actions ✔️
+- Composer✔️
+- Go✔️
+- Maven✔️
+- NPM: 🟠 [wip - see issue](https://github.com/Malwarebytes/purl-license-checker/issues/10)
+- Nuget✔️
+- Pip: 🟠[wip - see issue](https://github.com/Malwarebytes/purl-license-checker/issues/7)
+- Rubygems✔️
+- Rust: 🟠 [wip - see issue](https://github.com/Malwarebytes/purl-license-checker/issues/12)
+- Swift: 🟠 wip
 
 ## Installation
 
@@ -36,7 +47,97 @@ python -m pip install /full/path/to/purl-license-checker-xxx.whl
 
 ## Usage
 
-`purl-license-checker -h` or see the [wiki](https://github.com/Malwarebytes/purl-license-checker/wiki).
+To show the help message for each command, run `purl-license-checker -h`:
+
+```
+Usage: purl-license-checker [OPTIONS] COMMAND [ARGS]...
+
+  Retrieve licenses for purl documented dependencies.
+
+  Get help: `@jboursier-mwb` on GitHub
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  get_license
+  load_file
+  merge_csv
+```
+
+### Get a license
+
+```
+get_license PURL GITHUB_TOKEN
+```
+
+e.g:
+
+```
+get_license pip:ghas-cli gh-123456789qwerty
+```
+
+### Find licenses for a csv-list of purl dependencies
+
+```
+load_file PATH GITHUB_TOKEN
+```
+
+e.g:
+
+With a `PATH` csv file formatted as follow:
+
+```csv
+repo_name, purl, version, license
+```
+
+Where missing licenses are set to `Unknown`, for instance:
+
+```csv
+ghas-cli, ghas-cli, com.github.Malwarebytes/ghas-cli,, MIT
+ghas-cli, pip:charset-normalizer,3.3.2, MIT
+ghas-cli, pip:colorama,0.4.6, BSD-2-Clause AND BSD-3-Clause
+ghas-cli, pip:click,8.1.7, BSD-2-Clause AND BSD-3-Clause
+ghas-cli, pip:python-magic,0.4.27, MIT
+ghas-cli, pip:urllib3,2.2.3, MIT
+ghas-cli, pip:requests,2.32.3, Apache-2.0
+ghas-cli, pip:configparser,7.1.0, MIT
+ghas-cli, pip:certifi,2024.8.30, MPL-2.0
+ghas-cli, pip:idna,3.10, BSD-2-Clause AND BSD-3-Clause
+ghas-cli, actions:actions/checkout,4.*.*, Unknown
+ghas-cli, actions:github/codeql-action/analyze,3.*.*, Unknown
+ghas-cli, actions:github/codeql-action/init,3.*.*, Unknown
+ghas-cli, actions:actions/dependency-review-action,4.*.*, Unknown
+```
+
+`load_file` will do its best to find the licenses for all `Unknown` license fields and will output its results in `output.csv`.
+
+The output format is as follow:
+
+```csv
+purl, license
+```
+
+For instance:
+
+```csv
+npm:unicode-match-property-ecmascript, MIT
+npm:unicode-match-property-value-ecmascript, MIT
+npm:unicode-property-aliases-ecmascript, MIT
+npm:universalify, MIT
+npm:unpipe, MIT
+npm:use-sync-external-store, MIT
+npm:util-deprecate, MIT
+npm:utils-merge, MIT
+```
+
+### Fill an existing partial csv list of purl licenses
+```
+merge_csv LICENSES_INPUT_PATH DEPENDENCIES_OUTPUT_PATH GITHUB_TOKEN
+```
+
+Allows to fill the unknown dependencies in `DEPENDENCIES_OUTPUT_PATH` formatted as `repo_name, purl, version, license` from `LICENSES_INPUT_PATH` containing only `purl, license`.
+Particularly useful with a workflow based on [ghas-cli](https://github.com/Malwarebytes/ghas-cli).
 
 ## Development
 
