@@ -85,7 +85,7 @@ load_file PATH GITHUB_TOKEN
 
 e.g:
 
-With a csv file formatted as follow:
+With a `PATH` csv file formatted as follow:
 
 ```csv
 repo_name, purl, version, license
@@ -133,8 +133,11 @@ npm:utils-merge, MIT
 
 ### Fill an existing partial csv list of purl licenses
 ```
-merge_csv INPUT_PATH OUTPUT_PATH GITHUB_TOKEN
+merge_csv LICENSES_INPUT_PATH DEPENDENCIES_OUTPUT_PATH GITHUB_TOKEN
 ```
+
+Allows to fill the unknown dependencies in `DEPENDENCIES_OUTPUT_PATH` formatted as `repo_name, purl, version, license` from `LICENSES_INPUT_PATH` containing only `purl, license`.
+Particularly useful with a workflow based on [ghas-cli](https://github.com/Malwarebytes/ghas-cli).
 
 ## Development
 
