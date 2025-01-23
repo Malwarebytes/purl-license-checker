@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "purl-license-checker"
-version = "0.0.1"
+version = "0.0.2"
 description = "Retrieve licenses for purl documented dependencies."
 authors = ["jboursier <jboursier@malwarebytes.com>"]
 license = "MIT"
@@ -31,8 +31,6 @@ packageurl-python = "^0.15.6"
 logging = "^0.4.9.6"
 click = "^8.1.7"
 bs4 = "^0.0.2"
-
-[tool.poetry.dev-dependencies]
 
 [tool.poetry.scripts]
 purl-license-checker = 'src.cli:main'
