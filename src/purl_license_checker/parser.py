@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python3
 
-from packageurl import PackageURL
+import time
+
 import requests
 from bs4 import BeautifulSoup
-import time
+from packageurl import PackageURL
+
 
 def get_license(purl: str, token: str):
     try:
