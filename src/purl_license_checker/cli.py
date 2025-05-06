@@ -24,7 +24,7 @@ except ImportError:
     logging.error("Missing dependencies. Please reach @jboursier-mwb if needed.")
     sys.exit(255)
 
-from purl_license_checker import parser
+from . import parser
 
 
 def main() -> None:
