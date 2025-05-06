@@ -10,11 +10,12 @@ __status__ = "Development"
 
 
 try:
-    import click
     import json
-    from typing import Dict, Any, List
-    from datetime import datetime
     import logging
+    from datetime import datetime
+    from typing import Any, Dict, List
+
+    import click
 
     logging.getLogger().setLevel(level=logging.INFO)
 except ImportError:
