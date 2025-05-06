@@ -16,7 +16,7 @@ clean: ## clean existing builds
 
 release: ## Build a wheel
 	$(UV) build
-	$(SYFT) scan file:poetry.lock -o spdx-json > dist/sbom.json
+	$(SYFT) scan file:uv.lock -o spdx-json > dist/sbom.json
 	cd dist && sha512sum * > ../checksums.sha512
 	gpg --detach-sign --armor checksums.sha512
 

@@ -1,6 +1,6 @@
 [project]
 name = "purl-license-checker"
-version = "0.0.2"
+version = "0.1.0"
 description = "Retrieve licenses for purl documented dependencies."
 authors = [{name="jboursier", email="jboursier@malwarebytes.com"}]
 license = "MIT"
