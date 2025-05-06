@@ -51,7 +51,7 @@ funding = "https://www.malwarebytes.com/"
 
 
 [project.scripts]
-purl-license-checker = "cli:main"
+purl-license-checker = "src.cli:main"
 
 [build-system]
 requires = ["uv_build"]
