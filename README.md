@@ -4,6 +4,7 @@ Retrieve missing licenses for `purl` documented dependencies.
 
 
 [![CodeQL](https://github.com/Malwarebytes/purl-license-checker/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/Malwarebytes/purl-license-checker/actions/workflows/codeql.yml)
+[![CI](https://github.com/Malwarebytes/purl-license-checker/actions/workflows/ruff.yml/badge.svg)](https://github.com/Malwarebytes/purl-license-checker/actions/workflows/ruff.yml)
 [![Downloads](https://static.pepy.tech/personalized-badge/purl-license-checker?period=total&units=international_system&left_color=grey&right_color=blue&left_text=Downloads)](https://pepy.tech/project/purl-license-checker)
 [![Supported Versions](https://img.shields.io/pypi/pyversions/purl-license-checker.svg)](https://pypi.org/project/purl-license-checker)
 [![Contributors](https://img.shields.io/github/contributors/malwarebytes/purl-license-checker.svg)](https://github.com/malwarebytes/purl-license-checker/graphs/contributors)
