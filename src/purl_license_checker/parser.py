@@ -171,7 +171,7 @@ def get_nuget_license(purlfmt: PackageURL):
 
 def get_php_license(purlfmt: PackageURL):
     """
-    Fetch packagists.org to discover a license
+    Fetch packagist.org to discover a license
 
     Ex: https://repo.packagist.org/p2/symfony/event-dispatcher-contracts.json
     """
