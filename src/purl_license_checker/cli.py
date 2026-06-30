@@ -86,7 +86,7 @@ def load_csv(path: str, token: str) -> None:
 @click.argument("purl")
 @click.argument("token")
 def get_purl_license(purl: str, token: str) -> None:
-    click.echo(parser.get_license(purl=purl, token=str))
+    click.echo(parser.get_license(purl=purl, token=token))
 
 
 @cli.command("merge_csv")
