@@ -10,7 +10,7 @@ Retrieve missing licenses for `purl` documented dependencies.
 [![Contributors](https://img.shields.io/github/contributors/malwarebytes/purl-license-checker.svg)](https://github.com/malwarebytes/purl-license-checker/graphs/contributors)
 
 
-This cli utility takes one or more purl formatted urls from stdin and will try to find the license attached to each of them, by querying various package managers databases.
+This cli utility takes one or more purl formatted urls and will try to find the license attached to each of them, by querying various package managers databases.
 
 This is particularly useful to fill GitHub's Dependabot gap of missing 90% of licenses when working at scale with [ghas-cli](https://github.com/Malwarebytes/ghas-cli
 ) for instance.
@@ -116,20 +116,20 @@ ghas-cli, actions:actions/dependency-review-action,4.*.*, Unknown
 The output format is as follow:
 
 ```csv
-purl, license
+purl,license
 ```
 
 For instance:
 
 ```csv
-npm:unicode-match-property-ecmascript, MIT
-npm:unicode-match-property-value-ecmascript, MIT
-npm:unicode-property-aliases-ecmascript, MIT
-npm:universalify, MIT
-npm:unpipe, MIT
-npm:use-sync-external-store, MIT
-npm:util-deprecate, MIT
-npm:utils-merge, MIT
+npm:unicode-match-property-ecmascript,MIT
+npm:unicode-match-property-value-ecmascript,MIT
+npm:unicode-property-aliases-ecmascript,MIT
+npm:universalify,MIT
+npm:unpipe,MIT
+npm:use-sync-external-store,MIT
+npm:util-deprecate,MIT
+npm:utils-merge,MIT
 ```
 
 ### Fill an existing partial csv list of purl licenses
@@ -137,7 +137,7 @@ npm:utils-merge, MIT
 merge_csv LICENSES_INPUT_PATH DEPENDENCIES_OUTPUT_PATH GITHUB_TOKEN
 ```
 
-Allows to fill the unknown dependencies in `DEPENDENCIES_OUTPUT_PATH` formatted as `repo_name, purl, version, license` from `LICENSES_INPUT_PATH` containing only `purl, license`.
+Allows to fill the unknown dependencies in `DEPENDENCIES_OUTPUT_PATH` formatted as `repo_name, purl, version, license` from `LICENSES_INPUT_PATH` containing only `purl,license`.
 Particularly useful with a workflow based on [ghas-cli](https://github.com/Malwarebytes/ghas-cli).
 
 ## Development
@@ -153,7 +153,7 @@ make dev
 ### Bump the version number
 
 * Bump the version number: `uv version --minor`
-* Update the `__version__` field in `src/cli.py` accordingly.
+* Update the `__version__` field in `src/purl_license_checker/cli.py` accordingly.
 
 ### Publish a new version
 
