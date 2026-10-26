@@ -110,7 +110,7 @@ def merge_csvs(input_licenses_file: str, output_license_file: str) -> None:
             repo_output, purl_output, version_output, license_output = line.split(',')[:4]
             purl_output = purl_output.strip()
             license_output = license_output.strip()
-            if licenses_input[purl_output]:
+            if licenses_input.get(purl_output):
                 str_output += f"{repo_output.strip()}, {purl_output.strip()}, {version_output.strip()}, {licenses_input[purl_output]}"
                 str_output += "\n"
             else:
