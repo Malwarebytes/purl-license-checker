@@ -21,12 +21,12 @@ This is particularly useful to fill GitHub's Dependabot gap of missing 90% of li
 - Composer✔️
 - Go✔️
 - Maven✔️
-- NPM: 🟠 [wip - see issue](https://github.com/Malwarebytes/purl-license-checker/issues/10)
+- NPM✔️
 - Nuget✔️
-- Pip: 🟠[wip - see issue](https://github.com/Malwarebytes/purl-license-checker/issues/7)
+- Pip✔️
 - Rubygems✔️
-- Rust: 🟠 [wip - see issue](https://github.com/Malwarebytes/purl-license-checker/issues/12)
-- Swift: 🟠 wip
+- Rust✔️
+- Swift✔️
 
 ## Installation
 
