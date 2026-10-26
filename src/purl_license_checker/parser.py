@@ -65,7 +65,7 @@ def get_gha_license(purlfmt: PackageURL, token: str):
     )
 
     if repo.status_code != 200:
-        print(repo.status_code)
+        logging.warning("GitHub API returned %s for %s", repo.status_code, purl_path)
         return False
 
     try:
@@ -92,7 +92,7 @@ def get_go_license(purlfmt: PackageURL):
     )
 
     if pkg.status_code != 200:
-        print(pkg.status_code)
+        logging.warning("pkg.go.dev returned %s for %s", pkg.status_code, purl_path)
         return False
     
     try:
@@ -124,15 +124,17 @@ def get_maven_license(purlfmt: PackageURL, token: str):
     )
 
     if pkg.status_code != 200:
-        print(pkg.status_code)
+        logging.warning("central.sonatype.com returned %s for %s", pkg.status_code, purl_path)
         return False
     
     try:
         page = BeautifulSoup(pkg.text, "html.parser")
-        license = page.find(attrs={"data-test":"license"}).get_text()
-        print(license)
+        element = page.find(attrs={"data-test": "license"})
+        if element is None:
+            return False
+        license = element.get_text(strip=True)
     except Exception as e:
-        print(str(e))
+        logging.warning("Failed to parse Maven license for %s: %s", purl_path, e)
         return False
     
     time.sleep(0.5)
@@ -157,14 +159,13 @@ def get_nuget_license(purlfmt: PackageURL):
     )
 
     if pkg.status_code != 200:
-        print(pkg.status_code)
+        logging.warning("nuget query returned %s for %s", pkg.status_code, purl_path)
         return False
     
     try:
         license = pkg.json()["data"][0]["licenseUrl"]
-        print(license)
-    except Exception as e:
-        print(str(e))
+    except (KeyError, IndexError, TypeError, ValueError) as e:
+        logging.warning("Failed to parse Nuget license for %s: %s", purl_path, e)
         return False
 
     return license
@@ -186,12 +187,13 @@ def get_php_license(purlfmt: PackageURL):
     )
 
     if pkg.status_code != 200:
-        print(pkg.status_code)
+        logging.warning("packagist returned %s for %s", pkg.status_code, purl_path)
         return False
 
     try:
         license = pkg.json()["packages"][purl_path][0]["license"][0]
-    except Exception as e:
+    except (KeyError, IndexError, TypeError, ValueError) as e:
+        logging.warning("Failed to parse PHP license for %s: %s", purl_path, e)
         return False
 
     return license
@@ -213,13 +215,13 @@ def get_ruby_license(purlfmt: PackageURL)-> str:
     )
 
     if pkg.status_code != 200:
-        print(pkg.status_code)
+        logging.warning("rubygems returned %s for %s", pkg.status_code, purl_path)
         return False
 
     try:
         license = pkg.json()["licenses"][0]
-    except Exception as e:
-        print(str(e))
+    except (KeyError, IndexError, TypeError, ValueError) as e:
+        logging.warning("Failed to parse Ruby license for %s: %s", purl_path, e)
         return False
 
     return license
