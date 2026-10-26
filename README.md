@@ -153,7 +153,8 @@ make dev
 ### Bump the version number
 
 * Bump the version number: `uv version --minor`
-* Update the `__version__` field in `src/purl_license_checker/cli.py` accordingly.
+
+The CLI reads its version from the installed package metadata (`pyproject.toml` is the single source of truth), so no other file needs editing.
 
 ### Publish a new version
 

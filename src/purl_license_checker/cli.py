@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python3
 
+from importlib.metadata import PackageNotFoundError, version
+
 __author__ = "jboursier"
 __copyright__ = "Copyright 2025, Malwarebytes"
-__version__ = "0.2.0"
+try:
+    __version__ = version("purl-license-checker")
+except PackageNotFoundError:  # running from source without install
+    __version__ = "0.0.0.dev0"
 __maintainer__ = "jboursier"
 __email__ = "jboursier@malwarebytes.com"
 __status__ = "Development"
