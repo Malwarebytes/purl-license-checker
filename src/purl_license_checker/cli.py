@@ -10,6 +10,7 @@ __status__ = "Development"
 
 
 try:
+    import csv
     import json
     import logging
     from datetime import datetime
@@ -52,20 +53,18 @@ def load_csv(path: str, token: str) -> None:
 
     # Parse the csv input
     # repo_name, purl, version, license
-    input_csv = {}
-    with open(path, "r") as f:
-        for l in f.readlines():
-            line = l.split(",")
-            input_csv
-            try:
-                if licenses[line[1].strip()] != "":
-                    continue
-            except:
-                pass
-            if line[3].strip() != "Unknown":
-                licenses[line[1].strip()] = line[3].strip()
-            else:
-                licenses[line[1].strip()] = ""
+    with open(path, "r", newline="") as f:
+        for row in csv.reader(f):
+            if len(row) < 4:
+                continue
+            purl = row[1].strip()
+            license = row[3].strip()
+
+            # Keep the first non-empty license we see for a given purl.
+            if licenses.get(purl):
+                continue
+
+            licenses[purl] = "" if license == "Unknown" else license
 
         # Fetch the license for each empty license
         for l in licenses.keys():
