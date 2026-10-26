@@ -25,12 +25,8 @@ classifiers = [
 dependencies = [
     "bs4>=0.0.2",
     "click>=8.1.8",
-    "configparser>=7.1.0",
-    "logging>=0.4.9.6",
     "packageurl-python>=0.16.0",
-    "python-magic>=0.4.27",
     "requests>=2.32.3",
-    "urllib3>=2.2.3",
 ]
 
 [project.optional-dependencies]
