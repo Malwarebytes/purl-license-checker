@@ -11,14 +11,14 @@ from packageurl import PackageURL
 def get_license(purl: str, token: str):
     try:
         purlfmt = PackageURL.from_string(purl)
-    except:
-        #print("Invalid purl, trying to reformat...")
+    except ValueError:
+        # Invalid purl, try to reformat it.
         try:
             purlfmt = PackageURL.from_string(f"pkg:{purl.replace(':', '/', 1)}")
-        except Exception as e:
+        except ValueError:
             try:
-                purlfmt = PackageURL.from_string(f"pkg:{purl.replace(':', '/', 2)}") # Maven fixes
-            except:
+                purlfmt = PackageURL.from_string(f"pkg:{purl.replace(':', '/', 2)}")  # Maven fixes
+            except ValueError:
                 return False
 
     match purlfmt.type:
@@ -69,7 +69,7 @@ def get_gha_license(purlfmt: PackageURL, token: str):
 
     try:
         license = repo.json()["license"]["spdx_id"]
-    except Exception as e:
+    except (KeyError, TypeError, ValueError):
         return False
 
     return license
