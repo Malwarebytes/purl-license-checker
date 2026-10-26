@@ -75,11 +75,10 @@ def load_csv(path: str, token: str) -> None:
 
 
     # Store the output
-    with open("output.csv", "w") as f:
+    with open("output.csv", "w", newline="") as f:
+        writer = csv.writer(f)
         for k in licenses.keys():
-            f.write(f"{k}, {licenses[k]}\n")
-
-    #print(licenses)
+            writer.writerow([k, licenses[k]])
 
 @cli.command("get_license")
 @click.argument("purl")
@@ -93,31 +92,27 @@ def get_purl_license(purl: str, token: str) -> None:
 @click.argument("output_license_file")
 # Merge CSV, add licenses.csv into deps_list_output.csv
 def merge_csvs(input_licenses_file: str, output_license_file: str) -> None:
-    str_output = ""
-    licenses_input = {}
-    with open(input_licenses_file, "r") as finput:
-        finput_lines = finput.readlines()
-        for l in finput_lines:
-            try:
-                purl, license = l.split(',', maxsplit=1)
-            except Exception as e:
-                print(l + str(e))
+    licenses_input: Dict[str, str] = {}
+    with open(input_licenses_file, "r", newline="") as finput:
+        for row in csv.reader(finput):
+            if len(row) < 2:
+                continue
+            purl, license = row[0], row[1]
             licenses_input[purl.strip()] = license.strip()
 
-    with open(output_license_file, 'r') as foutput:
-        for line in foutput.readlines():
-            repo_output, purl_output, version_output, license_output = line.split(',')[:4]
-            purl_output = purl_output.strip()
-            license_output = license_output.strip()
-            if licenses_input.get(purl_output):
-                str_output += f"{repo_output.strip()}, {purl_output.strip()}, {version_output.strip()}, {licenses_input[purl_output]}"
-                str_output += "\n"
-            else:
-                str_output += f"{repo_output.strip()}, {purl_output.strip()}, {version_output.strip()}, Unknown"
-                str_output += "\n"
-
-    with open("deps_output.csv", "w") as fexport:
-        fexport.write(str_output)
+    with open("deps_output.csv", "w", newline="") as fexport:
+        writer = csv.writer(fexport)
+        with open(output_license_file, "r", newline="") as foutput:
+            for row in csv.reader(foutput):
+                if len(row) < 4:
+                    continue
+                repo_output, purl_output, version_output = (
+                    row[0].strip(),
+                    row[1].strip(),
+                    row[2].strip(),
+                )
+                license = licenses_input.get(purl_output) or "Unknown"
+                writer.writerow([repo_output, purl_output, version_output, license])
 
 
 if __name__ == "__main__":
