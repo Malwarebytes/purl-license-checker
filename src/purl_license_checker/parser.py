@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python3
 
+import logging
 import time
 
 import requests
@@ -96,9 +97,12 @@ def get_go_license(purlfmt: PackageURL):
     
     try:
         page = BeautifulSoup(pkg.text, "html.parser")
-        license = page.find(id="#lic-0").get_text()
+        element = page.select_one("#lic-0")
+        if element is None:
+            return False
+        license = element.get_text(strip=True)
     except Exception as e:
-        print(str(e))
+        logging.warning("Failed to parse Go license for %s: %s", purl_path, e)
         return False
     
     return license
