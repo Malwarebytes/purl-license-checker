@@ -10,7 +10,8 @@ SYFT = syft
 
 clean: ## clean existing builds
 	rm -rf ./dist || true
-	rm -rf ./src/purl-license-checker/purl-license-checker.egg-info || true
+	rm -rf ./src/purl_license_checker/*.egg-info || true
+	rm -rf ./src/purl_license_checker/__pycache__ || true
 	rm checksums.sha512 || true
 	rm checksums.sha512.asc || true
 
